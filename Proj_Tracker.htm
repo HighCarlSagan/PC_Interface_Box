@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PC Interface Project - Complete Design Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root{--bg-primary:#0a0e14;--bg-secondary:#121820;--bg-tertiary:#1a222d;--bg-card:#151d28;--accent-cyan:#00e5ff;--accent-magenta:#ff00aa;--accent-green:#00ff88;--accent-yellow:#ffdd00;--accent-orange:#ff8800;--accent-purple:#aa55ff;--text-primary:#e8eaed;--text-secondary:#9aa0a6;--text-muted:#5f6368;--border-color:#2d3748}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg-primary);color:var(--text-primary);line-height:1.7}
+        ::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:var(--bg-secondary)}::-webkit-scrollbar-thumb{background:var(--border-color);border-radius:4px}::-webkit-scrollbar-thumb:hover{background:var(--accent-cyan)}
+        .nav-container{position:fixed;top:0;left:0;width:260px;height:100vh;background:var(--bg-secondary);border-right:1px solid var(--border-color);overflow-y:auto;z-index:1000;padding:20px 0}
+        .nav-header{padding:20px;border-bottom:1px solid var(--border-color);margin-bottom:15px}
+        .nav-header h1{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;color:var(--accent-cyan);margin-bottom:4px}
+        .nav-header p{font-size:.7rem;color:var(--text-muted)}
+        .nav-section{margin-bottom:8px}
+        .nav-section-title{padding:8px 20px;font-family:'JetBrains Mono',monospace;font-size:.6rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px}
+        .nav-link{display:block;padding:6px 20px 6px 28px;color:var(--text-secondary);text-decoration:none;font-size:.8rem;border-left:2px solid transparent;transition:all .2s}
+        .nav-link:hover{color:var(--text-primary);background:var(--bg-tertiary);border-left-color:var(--accent-cyan)}
+        .nav-link.active{color:var(--accent-cyan);border-left-color:var(--accent-cyan)}
+        .progress-box{margin:15px 20px;padding:12px;background:var(--bg-tertiary);border-radius:6px;border:1px solid var(--border-color)}
+        .progress-label{display:flex;justify-content:space-between;font-size:.7rem;margin-bottom:6px}
+        .progress-track{height:5px;background:var(--bg-primary);border-radius:3px;overflow:hidden}
+        .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent-cyan),var(--accent-green));border-radius:3px;width:0%;transition:width .5s}
+        .main-content{margin-left:260px;padding:30px 50px;max-width:1100px}
+        .hero{padding:50px 0;margin-bottom:30px;border-bottom:1px solid var(--border-color)}
+        .hero h1{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;font-weight:700;background:linear-gradient(135deg,var(--accent-cyan),var(--accent-magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px}
+        .hero p{font-size:1.1rem;color:var(--text-secondary);max-width:550px}
+        .badges{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+        .badge{padding:5px 12px;background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:15px;font-family:'JetBrains Mono',monospace;font-size:.7rem}
+        .badge.cyan{border-color:var(--accent-cyan);color:var(--accent-cyan)}.badge.green{border-color:var(--accent-green);color:var(--accent-green)}.badge.yellow{border-color:var(--accent-yellow);color:var(--accent-yellow)}.badge.magenta{border-color:var(--accent-magenta);color:var(--accent-magenta)}
+        .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:20px 0}
+        .stat-card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;padding:16px;text-align:center}
+        .stat-value{font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;color:var(--accent-cyan)}
+        .stat-label{font-size:.75rem;color:var(--text-muted);margin-top:4px}
+        .section{margin-bottom:50px;scroll-margin-top:30px}
+        .section-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid var(--border-color)}
+        .section-num{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:600;color:var(--bg-primary);padding:3px 8px;border-radius:4px}
+        .section-num.p0{background:var(--accent-purple)}.section-num.p1{background:var(--accent-cyan)}.section-num.p2{background:var(--accent-green)}.section-num.p3{background:var(--accent-yellow)}.section-num.p4{background:var(--accent-orange)}.section-num.p5{background:var(--accent-magenta)}.section-num.p6{background:var(--accent-purple)}
+        .section-title{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:600}
+        .subsection{margin-bottom:30px}
+        .subsection-title{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:600;color:var(--accent-cyan);margin-bottom:12px}
+        .subsection-title::before{content:'▸ ';color:var(--accent-cyan)}
+        .card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:10px;padding:20px;margin-bottom:16px}
+        .card-title{font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:600;margin-bottom:12px}
+        .code-block{background:var(--bg-primary);border:1px solid var(--border-color);border-radius:8px;overflow:hidden;margin:12px 0}
+        .code-header{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:var(--bg-tertiary);border-bottom:1px solid var(--border-color)}
+        .code-lang{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--accent-cyan);text-transform:uppercase}
+        .code-copy{background:transparent;border:1px solid var(--border-color);color:var(--text-secondary);padding:3px 8px;border-radius:4px;font-size:.65rem;cursor:pointer}
+        .code-copy:hover{border-color:var(--accent-cyan);color:var(--accent-cyan)}
+        .code-content{padding:14px;overflow-x:auto}
+        pre{font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.5;color:var(--text-primary);margin:0;white-space:pre}
+        code{font-family:'JetBrains Mono',monospace;background:var(--bg-tertiary);padding:2px 5px;border-radius:3px;font-size:.8em;color:var(--accent-cyan)}
+        .checklist{list-style:none}
+        .checklist-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-color)}
+        .checklist-item:last-child{border-bottom:none}
+        .checklist-checkbox{appearance:none;width:20px;height:20px;min-width:20px;border:2px solid var(--border-color);border-radius:4px;cursor:pointer;position:relative;margin-top:2px}
+        .checklist-checkbox:hover{border-color:var(--accent-cyan)}
+        .checklist-checkbox:checked{background:var(--accent-green);border-color:var(--accent-green)}
+        .checklist-checkbox:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--bg-primary);font-size:12px;font-weight:bold}
+        .checklist-label{flex:1;cursor:pointer;font-size:.9rem}
+        .checklist-label.done{text-decoration:line-through;color:var(--text-muted)}
+        .table-wrap{overflow-x:auto;margin:12px 0;border:1px solid var(--border-color);border-radius:8px}
+        table{width:100%;border-collapse:collapse;font-size:.85rem}
+        th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border-color)}
+        th{background:var(--bg-tertiary);font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent-cyan);text-transform:uppercase}
+        tr:last-child td{border-bottom:none}
+        .diagram{background:var(--bg-primary);border:1px solid var(--border-color);border-radius:8px;padding:16px;overflow-x:auto;margin:12px 0}
+        .diagram pre{font-size:.7rem;line-height:1.3;color:var(--accent-green)}
+        .info-box{padding:14px 18px;border-radius:8px;margin:12px 0;border-left:4px solid}
+        .info-box.note{background:rgba(0,229,255,.05);border-color:var(--accent-cyan)}
+        .info-box.warning{background:rgba(255,221,0,.05);border-color:var(--accent-yellow)}
+        .info-box.success{background:rgba(0,255,136,.05);border-color:var(--accent-green)}
+        .info-box-title{font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:600;text-transform:uppercase;margin-bottom:6px}
+        .info-box.note .info-box-title{color:var(--accent-cyan)}.info-box.warning .info-box-title{color:var(--accent-yellow)}.info-box.success .info-box-title{color:var(--accent-green)}
+        .file-tree{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:8px;padding:16px;line-height:1.7}
+        .file-tree .folder{color:var(--accent-cyan)}.file-tree .file{color:var(--text-secondary)}.file-tree .comment{color:var(--text-muted);font-style:italic}
+        .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+        .component-card{background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;padding:16px;margin-bottom:12px}
+        .component-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+        .component-name{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--accent-cyan)}
+        .component-pkg{font-family:'JetBrains Mono',monospace;font-size:.65rem;background:var(--bg-tertiary);padding:3px 6px;border-radius:4px;color:var(--text-muted)}
+        .component-specs{font-size:.85rem;color:var(--text-secondary);list-style:none}
+        .component-specs li{margin:3px 0;padding-left:14px;position:relative}
+        .component-specs li::before{content:'•';position:absolute;left:0;color:var(--accent-green)}
+        .expandable{border:1px solid var(--border-color);border-radius:8px;margin-bottom:10px;overflow:hidden}
+        .expandable-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--bg-tertiary);cursor:pointer}
+        .expandable-header:hover{background:var(--bg-card)}
+        .expandable-title{font-weight:600;font-size:.9rem}
+        .expandable-icon{transition:transform .3s}
+        .expandable.open .expandable-icon{transform:rotate(180deg)}
+        .expandable-content{display:none;padding:16px;background:var(--bg-card)}
+        .expandable.open .expandable-content{display:block}
+        .timeline{position:relative;padding-left:24px}
+        .timeline::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:2px;background:var(--border-color)}
+        .timeline-item{position:relative;padding-bottom:24px}
+        .timeline-item::before{content:'';position:absolute;left:-22px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--bg-primary);border:2px solid var(--accent-cyan)}
+        .timeline-week{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent-cyan);margin-bottom:6px}
+        .timeline-title{font-weight:600;margin-bottom:6px}
+        .timeline-tasks{color:var(--text-secondary);font-size:.85rem}
+        @media(max-width:1000px){.grid-2{grid-template-columns:1fr}.stats-grid{grid-template-columns:repeat(2,1fr)}.nav-container{transform:translateX(-100%);transition:transform .3s}.nav-container.open{transform:translateX(0)}.main-content{margin-left:0;padding:20px}.mobile-toggle{display:block!important}}
+        .mobile-toggle{display:none;position:fixed;top:15px;left:15px;z-index:1001;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);padding:8px 12px;border-radius:6px;cursor:pointer;font-size:1.2rem}
+        @media print{.nav-container,.mobile-toggle,.code-copy{display:none!important}.main-content{margin-left:0;padding:20px}}
+    </style>
+</head>
+<body>
+    <button class="mobile-toggle" onclick="document.getElementById('nav').classList.toggle('open')">☰</button>
+    <nav class="nav-container" id="nav">
+        <div class="nav-header"><h1>🖥️ PC Interface Project</h1><p>Complete Design Guide v1.0</p></div>
+        <div class="progress-box"><div class="progress-label"><span>Progress</span><span id="progress-pct">0%</span></div><div class="progress-track"><div class="progress-fill" id="progress-bar"></div></div></div>
+        <div class="nav-section"><div class="nav-section-title">Setup</div><a href="#setup" class="nav-link">Project Setup</a><a href="#requirements" class="nav-link">Requirements</a></div>
+        <div class="nav-section"><div class="nav-section-title">Phase 1: Hardware</div><a href="#schematic" class="nav-link">Schematic Design</a><a href="#bom" class="nav-link">BOM Analysis</a><a href="#power" class="nav-link">Power Analysis</a></div>
+        <div class="nav-section"><div class="nav-section-title">Phase 2: PCB</div><a href="#pcb" class="nav-link">PCB Layout</a><a href="#routing" class="nav-link">Routing Guidelines</a></div>
+        <div class="nav-section"><div class="nav-section-title">Phase 3-4</div><a href="#thermal" class="nav-link">Thermal Analysis</a><a href="#enclosure" class="nav-link">Enclosure Design</a></div>
+        <div class="nav-section"><div class="nav-section-title">Phase 5: Firmware</div><a href="#firmware" class="nav-link">Project Structure</a><a href="#wifi" class="nav-link">WiFi Provisioning</a></div>
+        <div class="nav-section"><div class="nav-section-title">Phase 6</div><a href="#git" class="nav-link">Version Control</a><a href="#timeline" class="nav-link">Timeline</a></div>
+    </nav>
+
+    <main class="main-content">
+        <header class="hero"><h1>PC Interface Project</h1><p>A complete multi-function desktop display with media controls, WiFi provisioning, and remote content updates. Built with ESP32-S3.</p><div class="badges"><span class="badge cyan">ESP32-S3</span><span class="badge green">3.5" TFT</span><span class="badge yellow">USB-C</span><span class="badge magenta">WiFi + MQTT</span></div></header>
+        <div class="stats-grid"><div class="stat-card"><div class="stat-value">&lt;$30</div><div class="stat-label">BOM Cost</div></div><div class="stat-card"><div class="stat-value">~1W</div><div class="stat-label">Power</div></div><div class="stat-card"><div class="stat-value">45</div><div class="stat-label">Source Files</div></div><div class="stat-card"><div class="stat-value">12</div><div class="stat-label">Weeks</div></div></div>
+
+        <section class="section" id="setup">
+            <div class="section-header"><span class="section-num p0">SETUP</span><h2 class="section-title">Project Setup</h2></div>
+            <div class="subsection"><h3 class="subsection-title">Create Folder Structure (Arch Linux)</h3>
+                <div class="code-block"><div class="code-header"><span class="code-lang">Bash</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div><div class="code-content"><pre># Create main project directory
+mkdir -p ~/projects/desk-display
+cd ~/projects/desk-display
+
+# Create hardware (KiCad) structure
+mkdir -p hardware/{libs,docs,manufacturing/gerbers,3d-models}
+
+# Create firmware (ESP-IDF) structure
+mkdir -p firmware/main/{app,screens,drivers,comms,ui,storage,utils}
+mkdir -p firmware/{components,resources/{fonts,images,web},tools}
+
+# Create enclosure (CAD) structure
+mkdir -p enclosure/export
+
+# Create companion PC software structure
+mkdir -p companion
+
+# Create documentation structure
+mkdir -p docs
+
+# Create placeholder files
+touch hardware/desk-display.kicad_pro
+touch firmware/CMakeLists.txt firmware/sdkconfig.defaults firmware/partitions.csv
+touch firmware/main/CMakeLists.txt firmware/main/main.c
+touch enclosure/enclosure.scad enclosure/parameters.scad
+touch companion/display_server.py companion/requirements.txt
+touch docs/{assembly_guide.md,user_manual.md,api_reference.md}
+touch README.md LICENSE CHANGELOG.md
+
+echo "✓ Project structure created!"</pre></div></div>
+            </div>
+            <div class="subsection"><h3 class="subsection-title">Initialize Git Repository</h3>
+                <div class="code-block"><div class="code-header"><span class="code-lang">Bash</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div><div class="code-content"><pre>cd ~/projects/desk-display
+git init
+
+# Create .gitignore
+cat &gt; .gitignore &lt;&lt; 'EOF'
+# KiCad
+*.kicad_prl
+*-backups/
+fp-info-cache
+
+# ESP-IDF
+firmware/build/
+firmware/sdkconfig.old
+firmware/sdkconfig
+
+# Python
+__pycache__/
+*.pyc
+venv/
+
+# CAD
+*.FCStd1
+enclosure/export/*.gcode
+
+# IDE
+.vscode/
+.idea/
+EOF
+
+# Initial commit
+git add .
+git commit -m "Initial project structure"
+git checkout -b develop
+
+echo "✓ Git initialized!"</pre></div></div>
+            </div>
+            <div class="subsection"><h3 class="subsection-title">Install Tools (Arch Linux)</h3>
+                <div class="code-block"><div class="code-header"><span class="code-lang">Bash</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div><div class="code-content"><pre>sudo pacman -Syu
+
+# KiCad for PCB design
+sudo pacman -S kicad kicad-library kicad-library-3d
+
+# FreeCAD/OpenSCAD for enclosure
+sudo pacman -S freecad openscad
+
+# ESP-IDF dependencies
+sudo pacman -S --needed gcc git make flex bison gperf python python-pip \
+    python-setuptools cmake ninja ccache dfu-util libusb
+
+# ESP-IDF from AUR
+yay -S esp-idf
+
+# Python packages
+pip install flask paho-mqtt pyserial psutil --break-system-packages</pre></div></div>
+            </div>
+            <div class="subsection"><h3 class="subsection-title">Project Structure</h3>
+                <div class="file-tree"><pre><span class="folder">desk-display/</span>
+├── <span class="folder">hardware/</span>                <span class="comment"># KiCad project</span>
+│   ├── desk-display.kicad_pro
+│   ├── <span class="folder">libs/</span>                 <span class="comment"># Custom symbols/footprints</span>
+│   ├── <span class="folder">docs/</span>                 <span class="comment"># Schematic PDF, BOM</span>
+│   └── <span class="folder">manufacturing/</span>       <span class="comment"># Gerbers, JLCPCB files</span>
+├── <span class="folder">firmware/</span>               <span class="comment"># ESP-IDF project</span>
+│   └── <span class="folder">main/</span>
+│       ├── <span class="folder">app/</span>              <span class="comment"># Core application</span>
+│       ├── <span class="folder">screens/</span>          <span class="comment"># UI screens</span>
+│       ├── <span class="folder">drivers/</span>          <span class="comment"># Hardware drivers</span>
+│       ├── <span class="folder">comms/</span>            <span class="comment"># WiFi, HTTP, MQTT, USB</span>
+│       ├── <span class="folder">ui/</span>               <span class="comment"># LVGL rendering</span>
+│       └── <span class="folder">storage/</span>          <span class="comment"># NVS, SPIFFS</span>
+├── <span class="folder">enclosure/</span>              <span class="comment"># CAD files</span>
+├── <span class="folder">companion/</span>              <span class="comment"># PC software</span>
+└── <span class="folder">docs/</span>                   <span class="comment"># Documentation</span></pre></div>
+            </div>
+        </section>
+
+        <section class="section" id="requirements">
+            <div class="section-header"><span class="section-num p0">PHASE 0</span><h2 class="section-title">Requirements</h2></div>
+            <div class="grid-2">
+                <div class="card"><h3 class="card-title">Functional Requirements</h3>
+                    <ul class="checklist">
+                        <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">F1. Display text content (cheatsheets, calendars)</label></li>
+                        <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">F2. Media control (play/pause, next, prev, volume)</label></li>
+                        <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">F3. Navigation menu (up/down/left/right/select)</label></li>
+                        <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">F4. Remote content update (USB, WiFi, Internet)</label></li>
+                        <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">F5. User WiFi provisioning (on-device setup)</label></li>
+                        <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">F6. Store multiple screens locally</label></li>
+                        <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">F7. OTA firmware updates</label></li>
+                        <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">F8. PC stats display</label></li>
+                    </ul>
+                </div>
+                <div class="card"><h3 class="card-title">Non-Functional Requirements</h3>
+                    <ul class="checklist">
+                        <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">NF1. Power: USB-C 5V only</label></li>
+                        <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">NF2. Size: &lt;150mm any dimension</label></li>
+                        <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">NF3. Heat: Passive, &lt;45°C surface</label></li>
+                        <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">NF4. Works without internet (local-first)</label></li>
+                        <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">NF5. JLCPCB assembly compatible</label></li>
+                        <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">NF6. Cost: &lt;$30 BOM</label></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="info-box success"><div class="info-box-title">✓ WiFi Provisioning Confirmed</div><p><strong>ESP32-S3 fully supports on-device WiFi setup.</strong> Users can scan networks, enter passwords, save to NVS, and connect without reflashing.</p></div>
+        </section>
+
+        <section class="section" id="schematic">
+            <div class="section-header"><span class="section-num p1">PHASE 1</span><h2 class="section-title">Schematic Design</h2></div>
+            <div class="subsection"><h3 class="subsection-title">Schematic Sheets</h3>
+                <ul class="checklist">
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label"><strong>Sheet 1: POWER</strong> - USB-C, ESD, LDO, decoupling</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label"><strong>Sheet 2: MCU</strong> - ESP32-S3-WROOM-1, Boot/Reset, USB, LED</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label"><strong>Sheet 3: DISPLAY</strong> - FPC connector, backlight</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label"><strong>Sheet 4: INPUT</strong> - Encoder, buttons, debounce</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label"><strong>Sheet 5: CONNECTORS</strong> - Test points, debug header</label></li>
+                </ul>
+            </div>
+            <div class="subsection"><h3 class="subsection-title">GPIO Assignment</h3>
+                <div class="diagram"><pre>ESP32-S3-WROOM-1 Pin Assignment
+═══════════════════════════════════════════════════
+
+DISPLAY (SPI)          USB (Native)       ENCODER
+─────────────          ────────────       ───────
+GPIO10 → LCD_CS        GPIO19 → USB_D-    GPIO1 → ENC_A
+GPIO11 → LCD_CLK       GPIO20 → USB_D+    GPIO2 → ENC_B
+GPIO12 → LCD_MOSI                         GPIO3 → ENC_SW
+GPIO13 → LCD_DC
+GPIO14 → LCD_RST       MEDIA BUTTONS      NAV BUTTONS
+GPIO15 → LCD_BL        ─────────────      ───────────
+                       GPIO4 → BTN_PREV   GPIO7  → BTN_UP
+STATUS                 GPIO5 → BTN_PLAY   GPIO8  → BTN_DOWN
+──────                 GPIO6 → BTN_NEXT   GPIO9  → BTN_LEFT
+GPIO38 → WS2812B                          GPIO17 → BTN_RIGHT
+GPIO21 → BTN_MUTE      SYSTEM             GPIO18 → BTN_SEL
+                       ──────
+                       GPIO0 → BOOT
+                       EN    → RESET
+
+Total GPIOs: 22 | Available: 10+</pre></div>
+            </div>
+            <div class="subsection"><h3 class="subsection-title">Power Section Checklist</h3>
+                <div class="expandable open"><div class="expandable-header" onclick="this.parentElement.classList.toggle('open')"><span class="expandable-title">⚡ Power Circuit</span><span class="expandable-icon">▼</span></div>
+                    <div class="expandable-content">
+                        <ul class="checklist">
+                            <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">USB-C connector with all pins</label></li>
+                            <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">5.1kΩ on CC1 and CC2</label></li>
+                            <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">ESD protection (USBLC6-2SC6)</label></li>
+                            <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Input cap 10µF near LDO</label></li>
+                            <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Output cap 10µF near LDO</label></li>
+                            <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Power LED indicator</label></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="expandable"><div class="expandable-header" onclick="this.parentElement.classList.toggle('open')"><span class="expandable-title">🔲 MCU Circuit</span><span class="expandable-icon">▼</span></div>
+                    <div class="expandable-content">
+                        <ul class="checklist">
+                            <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">All VDD to 3.3V, GND to ground</label></li>
+                            <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">100nF decoupling on each VDD</label></li>
+                            <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">EN: 10kΩ pull-up + RC delay</label></li>
+                            <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">GPIO0: 10kΩ pull-up + boot button</label></li>
+                            <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">USB D+/D- connected</label></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="expandable"><div class="expandable-header" onclick="this.parentElement.classList.toggle('open')"><span class="expandable-title">✓ General Checks</span><span class="expandable-icon">▼</span></div>
+                    <div class="expandable-content">
+                        <ul class="checklist">
+                            <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">All values shown</label></li>
+                            <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Footprints assigned</label></li>
+                            <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Net labels on signals</label></li>
+                            <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">No ERC errors</label></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="bom">
+            <div class="section-header"><span class="section-num p1">PHASE 1</span><h2 class="section-title">Bill of Materials</h2></div>
+            <div class="subsection"><h3 class="subsection-title">Critical Components</h3>
+                <div class="grid-2">
+                    <div class="component-card"><div class="component-header"><span class="component-name">ESP32-S3-WROOM-1-N8R8</span><span class="component-pkg">LGA</span></div><ul class="component-specs"><li>Dual-core 240MHz, 8MB Flash, 8MB PSRAM</li><li>WiFi 2.4GHz, Native USB OTG</li><li>JLCPCB: C2913202 | ~$3.50</li></ul></div>
+                    <div class="component-card"><div class="component-header"><span class="component-name">3.5" ILI9488 TFT</span><span class="component-pkg">FPC 40-pin</span></div><ul class="component-specs"><li>480x320, SPI interface</li><li>Buy bare panel (AliExpress)</li><li>~$8-12</li></ul></div>
+                    <div class="component-card"><div class="component-header"><span class="component-name">AMS1117-3.3</span><span class="component-pkg">SOT-223</span></div><ul class="component-specs"><li>3.3V @ 1A LDO</li><li>JLCPCB: C6186 | ~$0.05</li></ul></div>
+                    <div class="component-card"><div class="component-header"><span class="component-name">USBLC6-2SC6</span><span class="component-pkg">SOT-23-6</span></div><ul class="component-specs"><li>USB ESD protection</li><li>JLCPCB: C7519 | ~$0.10</li></ul></div>
+                </div>
+            </div>
+            <div class="subsection"><h3 class="subsection-title">Complete BOM</h3>
+                <div class="table-wrap"><table><thead><tr><th>Component</th><th>Package</th><th>Qty</th><th>JLCPCB #</th><th>Cost</th></tr></thead><tbody>
+                    <tr><td>ESP32-S3-WROOM-1-N8R8</td><td>LGA</td><td>1</td><td>C2913202</td><td>$3.50</td></tr>
+                    <tr><td>AMS1117-3.3</td><td>SOT-223</td><td>1</td><td>C6186</td><td>$0.05</td></tr>
+                    <tr><td>USBLC6-2SC6</td><td>SOT-23-6</td><td>1</td><td>C7519</td><td>$0.10</td></tr>
+                    <tr><td>USB-C 16-pin</td><td>SMD</td><td>1</td><td>C168688</td><td>$0.30</td></tr>
+                    <tr><td>FPC 40-pin 0.5mm</td><td>SMD</td><td>1</td><td>C262667</td><td>$0.40</td></tr>
+                    <tr><td>EC11 Encoder</td><td>SMD</td><td>1</td><td>C470754</td><td>$0.50</td></tr>
+                    <tr><td>Tactile 6x6mm</td><td>SMD</td><td>8</td><td>C127509</td><td>$0.24</td></tr>
+                    <tr><td>WS2812B-2020</td><td>2020</td><td>1</td><td>C2874478</td><td>$0.10</td></tr>
+                    <tr><td>Caps/Resistors</td><td>0603/0805</td><td>~25</td><td>Various</td><td>$0.25</td></tr>
+                </tbody></table></div>
+                <div class="info-box note"><div class="info-box-title">Cost Summary</div><p><strong>Components:</strong> ~$5.46 | <strong>PCB:</strong> ~$5 | <strong>Assembly:</strong> ~$8 | <strong>Display:</strong> ~$10 | <strong>Total: ~$28.46</strong> ✓</p></div>
+            </div>
+        </section>
+
+        <section class="section" id="power">
+            <div class="section-header"><span class="section-num p1">PHASE 1</span><h2 class="section-title">Power Analysis</h2></div>
+            <div class="subsection"><h3 class="subsection-title">Power Budget</h3>
+                <div class="table-wrap"><table><thead><tr><th>Component</th><th>Voltage</th><th>Typical</th><th>Peak</th><th>Notes</th></tr></thead><tbody>
+                    <tr><td>ESP32-S3 (active)</td><td>3.3V</td><td>80mA</td><td>350mA</td><td>WiFi TX</td></tr>
+                    <tr><td>Display backlight</td><td>3.3V</td><td>100mA</td><td>150mA</td><td>PWM</td></tr>
+                    <tr><td>Display logic</td><td>3.3V</td><td>10mA</td><td>15mA</td><td>ILI9488</td></tr>
+                    <tr><td>WS2812B</td><td>5V</td><td>20mA</td><td>60mA</td><td>Full white</td></tr>
+                    <tr style="background:rgba(0,229,255,.1);font-weight:bold"><td>Total 3.3V</td><td>3.3V</td><td>211mA</td><td>516mA</td><td></td></tr>
+                </tbody></table></div>
+            </div>
+            <div class="subsection"><h3 class="subsection-title">LDO Thermal</h3>
+                <div class="card"><pre style="font-family:'JetBrains Mono',monospace;font-size:.85rem;">P_ldo = (V_in - V_out) × I_out
+
+Typical: P = (5V - 3.3V) × 0.211A = <span style="color:var(--accent-green)">0.36W</span>
+Peak:    P = (5V - 3.3V) × 0.516A = <span style="color:var(--accent-yellow)">0.88W</span>
+
+With thermal vias (θ_ja = 50°C/W):
+Typical: T = 25°C + (0.36W × 50) = <span style="color:var(--accent-green)">43°C</span> ✓
+Peak:    T = 25°C + (0.88W × 50) = <span style="color:var(--accent-yellow)">69°C</span> ✓</pre></div>
+                <div class="info-box warning"><div class="info-box-title">⚠️ Thermal Mitigation</div><p>Add copper pour under LDO with 9 thermal vias (0.3mm) to bottom ground plane.</p></div>
+            </div>
+        </section>
+
+        <section class="section" id="pcb">
+            <div class="section-header"><span class="section-num p2">PHASE 2</span><h2 class="section-title">PCB Layout</h2></div>
+            <div class="grid-2">
+                <div class="card"><h3 class="card-title">Physical Specs</h3><ul class="component-specs"><li><strong>Size:</strong> 100mm × 80mm</li><li><strong>Layers:</strong> 2</li><li><strong>Thickness:</strong> 1.6mm</li><li><strong>Copper:</strong> 1oz</li><li><strong>Finish:</strong> HASL lead-free</li><li><strong>Mask:</strong> Black</li></ul></div>
+                <div class="card"><h3 class="card-title">Design Rules (JLCPCB)</h3><ul class="component-specs"><li><strong>Min trace:</strong> 0.15mm (use 0.2mm)</li><li><strong>Min space:</strong> 0.15mm (use 0.2mm)</li><li><strong>Min via:</strong> 0.3mm drill</li><li><strong>Signal:</strong> 0.2mm trace</li><li><strong>Power:</strong> 0.5mm trace</li><li><strong>USB diff:</strong> 0.3mm + 0.15mm gap</li></ul></div>
+            </div>
+            <div class="diagram"><pre>PCB TOP VIEW - PLACEMENT
+══════════════════════════════════════════════════════════════
+
+┌────────────────────────────────────────────────────────────┐
+│    ┌────────────────────────────────────────────────────┐ │
+│    │              FPC CONNECTOR (Display)               │ │
+│    └────────────────────────────────────────────────────┘ │
+│                                                            │
+│    ┌───────────────────┐      ┌────────────────────┐      │
+│    │    ESP32-S3       │      │   POWER SECTION    │      │
+│    │    WROOM-1        │      │   USB→LDO→Caps     │      │
+│    └───────────────────┘      └────────────────────┘      │
+│                                                            │
+│    ┌────────────────────────────────────────────────────┐ │
+│    │  [⏮] [⏯] [⏭]    [ENCODER]    [▲] [●] [▼]         │ │
+│    │           [◄]                  [►]                 │ │
+│    │                USER INPUT ZONE                     │ │
+│    └────────────────────────────────────────────────────┘ │
+│    [RST] [BOOT]           [USB-C]              [LED]      │
+└────────────────────────────────────────────────────────────┘
+
+KEEP-OUT: Under ESP32 antenna (no copper for 15mm beyond edge)</pre></div>
+        </section>
+
+        <section class="section" id="routing">
+            <div class="section-header"><span class="section-num p2">PHASE 2</span><h2 class="section-title">Routing Guidelines</h2></div>
+            <div class="expandable open"><div class="expandable-header" onclick="this.parentElement.classList.toggle('open')"><span class="expandable-title">🔌 USB Differential (Critical)</span><span class="expandable-icon">▼</span></div>
+                <div class="expandable-content"><ul class="checklist">
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Route D+/D- as diff pair</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Same length (±0.5mm)</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">0.15mm constant gap</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">90Ω differential</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Length &lt;50mm</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">No vias in pair</label></li>
+                </ul></div>
+            </div>
+            <div class="expandable"><div class="expandable-header" onclick="this.parentElement.classList.toggle('open')"><span class="expandable-title">📡 Antenna Keep-Out</span><span class="expandable-icon">▼</span></div>
+                <div class="expandable-content"><ul class="checklist">
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">No copper under antenna</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">15mm clearance beyond module</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Module at PCB edge</label></li>
+                </ul></div>
+            </div>
+            <div class="expandable"><div class="expandable-header" onclick="this.parentElement.classList.toggle('open')"><span class="expandable-title">🔥 Thermal Vias</span><span class="expandable-icon">▼</span></div>
+                <div class="expandable-content"><ul class="checklist">
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Copper pour under LDO (5×8mm)</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">9 thermal vias (0.3mm)</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Connect to bottom GND</label></li>
+                </ul></div>
+            </div>
+            <div class="subsection"><h3 class="subsection-title">Pre-Manufacturing Checklist</h3>
+                <ul class="checklist">
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">DRC: zero errors</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">No unconnected nets</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Silkscreen clear of pads</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Polarity marks present</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Board outline closed</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Fiducials added</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Gerbers generated</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">BOM/CPL in JLCPCB format</label></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section" id="thermal">
+            <div class="section-header"><span class="section-num p3">PHASE 3</span><h2 class="section-title">Thermal Analysis</h2></div>
+            <div class="grid-2">
+                <div class="card"><h3 class="card-title">Manual Calculation</h3><p style="font-size:.9rem;color:var(--text-secondary)">T_junction = T_ambient + (P × θ_ja)<br>Sufficient for &lt;1W designs like ours.</p></div>
+                <div class="card"><h3 class="card-title">Online Calculators</h3><p style="font-size:.9rem;color:var(--text-secondary)">4pcb.com/trace-width-calculator.html<br>For trace width vs current.</p></div>
+            </div>
+            <div class="info-box success"><div class="info-box-title">✓ Passive Cooling Sufficient</div><p>~1W total dissipation handled by copper pour + thermal vias. Add ventilation slots to enclosure (2-3 cm²).</p></div>
+        </section>
+
+        <section class="section" id="enclosure">
+            <div class="section-header"><span class="section-num p4">PHASE 4</span><h2 class="section-title">Enclosure Design</h2></div>
+            <div class="grid-2">
+                <div class="card"><h3 class="card-title">Dimensions</h3><ul class="component-specs"><li><strong>Width:</strong> 110mm</li><li><strong>Height:</strong> 120mm</li><li><strong>Depth:</strong> 25mm</li></ul></div>
+                <div class="card"><h3 class="card-title">Material: PETG</h3><ul class="component-specs"><li>Heat resistant to 80°C</li><li>Good layer adhesion</li><li>Print: 230-250°C</li></ul></div>
+            </div>
+            <div class="subsection"><h3 class="subsection-title">Enclosure Checklist</h3>
+                <ul class="checklist">
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Display cutout sized correctly</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">USB-C port accessible</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Button holes aligned</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Ventilation slots (2-3 cm²)</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Mounting bosses for M2.5</label></li>
+                    <li class="checklist-item"><input type="checkbox" class="checklist-checkbox"><label class="checklist-label">Test print completed</label></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section" id="firmware">
+            <div class="section-header"><span class="section-num p5">PHASE 5</span><h2 class="section-title">Firmware Architecture</h2></div>
+            <div class="subsection"><h3 class="subsection-title">File Structure</h3>
+                <div class="file-tree"><pre><span class="folder">firmware/main/</span>
+├── main.c                    <span class="comment"># Entry point, init</span>
+├── <span class="folder">app/</span>
+│   ├── app_main.c            <span class="comment"># Main loop, events</span>
+│   ├── menu_system.c         <span class="comment"># Menu navigation</span>
+│   ├── screen_manager.c      <span class="comment"># Screen lifecycle</span>
+│   └── settings.c            <span class="comment"># NVS settings</span>
+├── <span class="folder">screens/</span>
+│   ├── screen_home.c         <span class="comment"># Dashboard</span>
+│   ├── screen_cheatsheet.c   <span class="comment"># Text viewer</span>
+│   ├── screen_calendar.c     <span class="comment"># Calendar</span>
+│   ├── screen_pcstats.c      <span class="comment"># PC monitoring</span>
+│   ├── <span style="color:var(--accent-yellow)">screen_wifi_setup.c</span>   <span class="comment"># WiFi provisioning ★</span>
+│   └── screen_settings.c     <span class="comment"># Device settings</span>
+├── <span class="folder">drivers/</span>
+│   ├── display_driver.c      <span class="comment"># ILI9488 SPI</span>
+│   ├── input_driver.c        <span class="comment"># Buttons, encoder</span>
+│   └── led_driver.c          <span class="comment"># WS2812B</span>
+├── <span class="folder">comms/</span>
+│   ├── <span style="color:var(--accent-yellow)">wifi_manager.c</span>        <span class="comment"># WiFi STA/AP ★</span>
+│   ├── http_server.c         <span class="comment"># Web server</span>
+│   ├── mqtt_client.c         <span class="comment"># MQTT remote</span>
+│   ├── usb_hid.c             <span class="comment"># Media keys</span>
+│   ├── usb_cdc.c             <span class="comment"># Serial commands</span>
+│   └── ota_update.c          <span class="comment"># OTA firmware</span>
+├── <span class="folder">ui/</span>
+│   ├── ui_init.c             <span class="comment"># LVGL setup</span>
+│   └── ui_keyboard.c         <span class="comment"># On-screen keyboard</span>
+└── <span class="folder">storage/</span>
+    ├── nvs_storage.c         <span class="comment"># Settings, WiFi creds</span>
+    └── spiffs_storage.c      <span class="comment"># File system</span></pre></div>
+            </div>
+        </section>
+
+        <section class="section" id="wifi">
+            <div class="section-header"><span class="section-num p5">PHASE 5</span><h2 class="section-title">WiFi Provisioning</h2></div>
+            <div class="info-box success"><div class="info-box-title">✓ ESP32-S3 Fully Supports This</div><p>Scan networks, store credentials in NVS, connect without reflashing. Works for multiple devices - each user sets up their own WiFi.</p></div>
+            <div class="subsection"><h3 class="subsection-title">User Flow</h3>
+                <div class="diagram"><pre>FIRST BOOT (No credentials)
+═══════════════════════════
+1. Device boots
+2. No WiFi in NVS → Show WiFi Setup screen
+3. User navigates to network list
+4. User selects network, enters password
+5. Credentials saved to NVS
+6. Device connects ✓
+
+NORMAL BOOT (Credentials exist)
+═══════════════════════════════
+1. Device boots
+2. Load WiFi from NVS
+3. Connect to saved network
+4. If fail: retry 3x, then show error
+5. User can access WiFi Setup from Settings</pre></div>
+            </div>
+            <div class="subsection"><h3 class="subsection-title">WiFi Setup Screen</h3>
+                <div class="diagram"><pre>┌────────────────────────────────────────────────────────┐
+│  WiFi Setup                                    [Back]  │
+├────────────────────────────────────────────────────────┤
+│  Available Networks:                         [Scan]    │
+│  ────────────────────────────────────────────          │
+│  ▶ HomeNetwork_5G         ████░  -45dBm  🔒           │
+│    CoffeeShop_Free        ███░░  -62dBm  🔓           │
+│    Neighbor_WiFi          ██░░░  -75dBm  🔒           │
+│                                                        │
+│  [▲ Up]  [▼ Down]  [● Select]                         │
+│                                                        │
+│  Current: HomeNetwork_5G   Status: Connected ✓        │
+└────────────────────────────────────────────────────────┘
+
+After selecting → On-screen keyboard OR web setup at 192.168.4.1</pre></div>
+            </div>
+            <div class="subsection"><h3 class="subsection-title">WiFi Manager Functions</h3>
+                <div class="card"><pre style="font-family:'JetBrains Mono',monospace;font-size:.8rem;">wifi_manager_init()           // Initialize WiFi subsystem
+wifi_manager_scan()           // Scan for networks (async)
+wifi_manager_get_results()    // Get scan results list
+wifi_manager_connect(ssid, pass)  // Connect to network
+wifi_manager_disconnect()     // Disconnect current
+wifi_manager_get_state()      // DISCONNECTED/CONNECTING/CONNECTED
+wifi_manager_save_creds()     // Save to NVS flash
+wifi_manager_load_creds()     // Load from NVS
+wifi_manager_clear_creds()    // Forget network
+wifi_manager_start_ap()       // AP mode for setup portal</pre></div>
+            </div>
+            <div class="info-box note"><div class="info-box-title">Persistence</div><p>Credentials survive reboots, power cycles, and OTA updates. Only erased by "Forget Network" or factory reset.</p></div>
+        </section>
+
+        <section class="section" id="git">
+            <div class="section-header"><span class="section-num p6">PHASE 6</span><h2 class="section-title">Version Control</h2></div>
+            <div class="subsection"><h3 class="subsection-title">Branch Strategy</h3>
+                <div class="card"><pre style="font-family:'JetBrains Mono',monospace;font-size:.85rem;">main        ─────●─────●─────●───────  Stable releases
+develop     ──●──●──●──●──●──●──●────  Integration
+feature/*   ──●──●  │                  New features
+hw/*        ────────●                  Hardware changes</pre></div>
+            </div>
+            <div class="subsection"><h3 class="subsection-title">Commit Prefixes</h3>
+                <div class="table-wrap"><table><thead><tr><th>Prefix</th><th>Use For</th><th>Example</th></tr></thead><tbody>
+                    <tr><td><code>[HW]</code></td><td>Hardware</td><td>[HW] Add ESD protection</td></tr>
+                    <tr><td><code>[FW]</code></td><td>Firmware</td><td>[FW] Implement WiFi scan</td></tr>
+                    <tr><td><code>[ENC]</code></td><td>Enclosure</td><td>[ENC] Add vent slots</td></tr>
+                    <tr><td><code>[DOC]</code></td><td>Docs</td><td>[DOC] Update assembly guide</td></tr>
+                </tbody></table></div>
+            </div>
+        </section>
+
+        <section class="section" id="timeline">
+            <div class="section-header"><span class="section-num p6">PHASE 6</span><h2 class="section-title">Development Timeline</h2></div>
+            <div class="timeline">
+                <div class="timeline-item"><div class="timeline-week">WEEK 1-2</div><div class="timeline-title">Schematic Design</div><div class="timeline-tasks">KiCad setup, power/MCU/display/input sheets, ERC</div></div>
+                <div class="timeline-item"><div class="timeline-week">WEEK 3-4</div><div class="timeline-title">PCB Layout</div><div class="timeline-tasks">Placement, routing, DRC, order PCBs</div></div>
+                <div class="timeline-item"><div class="timeline-week">WEEK 3-6</div><div class="timeline-title">Firmware Development</div><div class="timeline-tasks">Display driver, WiFi provisioning, USB HID (parallel)</div></div>
+                <div class="timeline-item"><div class="timeline-week">WEEK 7-8</div><div class="timeline-title">Enclosure Design</div><div class="timeline-tasks">CAD design, test print, iterate</div></div>
+                <div class="timeline-item"><div class="timeline-week">WEEK 9-10</div><div class="timeline-title">Integration & Testing</div><div class="timeline-tasks">Assemble, flash, test, debug</div></div>
+                <div class="timeline-item"><div class="timeline-week">WEEK 11-12</div><div class="timeline-title">Documentation & Release</div><div class="timeline-tasks">Guides, cleanup, GitHub release</div></div>
+            </div>
+        </section>
+
+        <section class="section" id="summary">
+            <div class="section-header"><span class="section-num p0">SUMMARY</span><h2 class="section-title">Key Answers</h2></div>
+            <div class="card"><h3 class="card-title">Can ESP32-S3 do WiFi provisioning from device menu?</h3><p style="color:var(--accent-green);font-weight:600;">YES!</p><p style="color:var(--text-secondary);font-size:.9rem;margin-top:8px;">Scan networks, display list, accept password, save to NVS, connect - all without reflashing.</p></div>
+            <div class="card"><h3 class="card-title">Can it update WiFi at button press?</h3><p style="color:var(--accent-green);font-weight:600;">YES!</p><p style="color:var(--text-secondary);font-size:.9rem;margin-top:8px;">wifi_manager_connect() saves to NVS immediately, disconnects, reconnects to new network.</p></div>
+            <div class="card"><h3 class="card-title">Multiple devices for others?</h3><p style="color:var(--accent-green);font-weight:600;">SUPPORTED!</p><p style="color:var(--text-secondary);font-size:.9rem;margin-top:8px;">Each device has its own NVS. No hardcoded credentials. Each user sets up their WiFi.</p></div>
+            <div class="card"><h3 class="card-title">Heatsink/Fan needed?</h3><p style="color:var(--accent-green);font-weight:600;">NO!</p><p style="color:var(--text-secondary);font-size:.9rem;margin-top:8px;">~1W dissipation handled by copper pour + thermal vias + enclosure vents.</p></div>
+        </section>
+
+        <footer style="margin-top:60px;padding:30px 0;border-top:1px solid var(--border-color);text-align:center;color:var(--text-muted);font-size:.85rem;">
+            <p>PC Interface Project Project Guide v1.0</p>
+            <p style="margin-top:8px;">Progress saved automatically in browser localStorage.</p>
+        </footer>
+    </main>
+
+    <script>
+        function copyCode(btn){const code=btn.closest('.code-block').querySelector('pre').textContent;navigator.clipboard.writeText(code).then(()=>{const orig=btn.textContent;btn.textContent='Copied!';setTimeout(()=>btn.textContent=orig,2000)})}
+        function updateProgress(){const all=document.querySelectorAll('.checklist-checkbox');const checked=document.querySelectorAll('.checklist-checkbox:checked');const pct=all.length>0?Math.round((checked.length/all.length)*100):0;document.getElementById('progress-pct').textContent=pct+'%';document.getElementById('progress-bar').style.width=pct+'%'}
+        function saveState(){const state={};document.querySelectorAll('.checklist-checkbox').forEach((cb,i)=>{state[i]=cb.checked});localStorage.setItem('desk-display-progress',JSON.stringify(state));updateProgress()}
+        function loadState(){const saved=localStorage.getItem('desk-display-progress');if(saved){const state=JSON.parse(saved);document.querySelectorAll('.checklist-checkbox').forEach((cb,i)=>{if(state[i]){cb.checked=true;cb.nextElementSibling.classList.add('done')}})}updateProgress()}
+        document.addEventListener('DOMContentLoaded',()=>{loadState();document.querySelectorAll('.checklist-checkbox').forEach(cb=>{cb.addEventListener('change',function(){this.nextElementSibling.classList.toggle('done',this.checked);saveState()})});document.querySelectorAll('.checklist-label').forEach(label=>{label.addEventListener('click',()=>{const cb=label.previousElementSibling;cb.checked=!cb.checked;label.classList.toggle('done',cb.checked);saveState()})})});
+        document.querySelectorAll('.nav-link').forEach(link=>{link.addEventListener('click',e=>{e.preventDefault();const target=document.querySelector(link.getAttribute('href'));if(target){target.scrollIntoView({behavior:'smooth'});document.getElementById('nav').classList.remove('open')}})});
+        window.addEventListener('scroll',()=>{const sections=document.querySelectorAll('.section');let current='';sections.forEach(section=>{const top=section.offsetTop-100;if(window.scrollY>=top){current=section.getAttribute('id')}});document.querySelectorAll('.nav-link').forEach(link=>{link.classList.remove('active');if(link.getAttribute('href')==='#'+current){link.classList.add('active')}})});
+    </script>
+</body>
+</html>
