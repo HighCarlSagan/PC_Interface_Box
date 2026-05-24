@@ -32,21 +32,21 @@ The table below tracks the design intent against what will ship on **v1.1** (the
 
 | # | Requirement | Target | Outcome (v1.1) |
 |---|---|---|---|
-| 1 | MCU with WiFi + BLE + USB + enough headroom for LVGL | ESP32-S3 class | ✅ ESP32-S3-WROOM-1-N16R8 (16 MB flash, 8 MB PSRAM) |
-| 2 | Display | ≥3" IPS, ≥320×240, SPI | ✅ Waveshare 3.5" IPS 320×480 (touch fanned out but unused in MkI) |
-| 3 | Tactile input | Real mechanical keys with backlighting | ✅ 5× Cherry MX2A-E1NA + per-key backlight LEDs |
-| 4 | Analog input | Rotary encoder with push | ✅ CUI ACZ11 (12 PPR, integrated switch) |
-| 5 | Non-volatile state across reboots | FRAM, ≥1 Mbit | ✅ MB85RS4MTYPN (4 Mbit SPI FRAM) |
-| 6 | Local storage for assets / logs | MicroSD socket | ✅ Hirose DM3BT push-push socket |
-| 7 | Single-cable host connection | USB-C, power + serial | ✅ USB-C 2.0 + CDC-ACM virtual COM |
-| 8 | Front-end protection | ESD + reverse-polarity + EMI filtering + fuse | ✅ USBLC6-2SC6 + SS14 + BLM18PG600 + 1.5A fuse |
-| 9 | Power | USB 5V in, single 3.3V rail | ✅ TLV1117LV33 LDO (1A capacity, ~400 mA budget) |
-| 10 | Board size | Comfortably hand-held footprint | ✅ 92 × 70 mm, 2-layer FR-4 |
-| 11 | Manufacturability | Common SMD, hand-solderable | ✅ 0603 passives, QFN regulator, through-hole switches |
-| 12 | Power-on bring-up | All rails verified | ⏳ TBD (waiting on v1.1) |
-| 13 | Display, switches, encoder, FRAM verified | Hardware sign-off | ⏳ TBD |
-| 14 | Firmware: LVGL, MQTT, OTA, mDNS | End-to-end on real board | ⏳ TBD |
-| 15 | Wooden enclosure | Oak / walnut, parametric CAD | 🔄 In progress, on backburner |
+| 1 | MCU with WiFi + BLE + USB + enough headroom for LVGL | ESP32-S3 class | ESP32-S3-WROOM-1-N16R8 (16 MB flash, 8 MB PSRAM) |
+| 2 | Display | ≥3" IPS, ≥320×240, SPI | Waveshare 3.5" IPS 320×480 (touch fanned out but unused in MkI) |
+| 3 | Tactile input | Real mechanical keys with backlighting | 5× Cherry MX2A-E1NA + per-key backlight LEDs |
+| 4 | Analog input | Rotary encoder with push | CUI ACZ11 (12 PPR, integrated switch) |
+| 5 | Non-volatile state across reboots | FRAM, ≥1 Mbit | MB85RS4MTYPN (4 Mbit SPI FRAM) |
+| 6 | Local storage for assets / logs | MicroSD socket | Hirose DM3BT push-push socket |
+| 7 | Single-cable host connection | USB-C, power + serial | USB-C 2.0 + CDC-ACM virtual COM |
+| 8 | Front-end protection | ESD + reverse-polarity + EMI filtering + fuse | USBLC6-2SC6 + SS14 + BLM18PG600 + 1.5A fuse |
+| 9 | Power | USB 5V in, single 3.3V rail | TLV1117LV33 LDO (1A capacity, ~400 mA budget) |
+| 10 | Board size | Comfortably hand-held footprint | 92 × 70 mm, 2-layer FR-4 |
+| 11 | Manufacturability | Common SMD, hand-solderable | 0603 passives, QFN regulator, through-hole switches |
+| 12 | Power-on bring-up | All rails verified | TBD (waiting on v1.1) |
+| 13 | Display, switches, encoder, FRAM verified | Hardware sign-off | TBD |
+| 14 | Firmware: LVGL, MQTT, OTA, mDNS | End-to-end on real board | TBD |
+| 15 | Wooden enclosure | Oak / walnut, parametric CAD | In progress, on backburner |
 
 ---
 
@@ -345,12 +345,12 @@ OakBridge_MkI/
 PCBs fabricated and hand-soldered. Discovered the 0mm-via DRC miss after assembly. Never powered up. Kept on the desk as a reminder.
 
 ### v1.1 — DRC-fixed respin (end of May 2026, in fab)
-- ✅ Drill diameters corrected, DRC clean, Gerbers re-exported
-- ⏳ Turnkey assembly with the fab — boards arrive populated
-- ⏳ Power-on bring-up (table above)
-- ⏳ Firmware v0.1 — display init, switches, encoder, FRAM read/write
-- ⏳ Firmware v0.2 — WiFi + MQTT + first PC-companion round-trip
-- 🔄 Enclosure CAD (oak) — in progress, no committed date
+- Drill diameters corrected, DRC clean, Gerbers re-exported
+- Turnkey assembly with the fab — boards arrive populated
+- Power-on bring-up (table above)
+- Firmware v0.1 — display init, switches, encoder, FRAM read/write
+- Firmware v0.2 — WiFi + MQTT + first PC-companion round-trip
+- Enclosure CAD (oak) — in progress, no committed date
 
 ### MkII — possibilities (much later, ~2027)
 
